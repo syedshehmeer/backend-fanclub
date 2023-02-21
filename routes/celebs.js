@@ -31,11 +31,6 @@ celebRouter.post("/", async (req, res) => {
 
     celeb = await new Celeb({ ...req.body, password: hashPassword }).save();
 
-    const token = await new Token({
-      celebId: celeb._id,
-      token: crypto.randomBytes(32).toString("hex"),
-    }).save();
-    const url = `${process.env.BASE_URL}celebs/${celeb.id}/verify/${token.token}`;
     await sendEmail(
       "fanclub.co.pk@gmail.com",
       "Verify Email",
