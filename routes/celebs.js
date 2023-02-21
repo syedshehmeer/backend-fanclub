@@ -36,8 +36,25 @@ celebRouter.post("/", async (req, res) => {
       token: crypto.randomBytes(32).toString("hex"),
     }).save();
     const url = `${process.env.BASE_URL}celebs/${celeb.id}/verify/${token.token}`;
-    await sendEmail("fanclub.co.pk@gmail.com", "Verify Email", "Celebrity request for registration verification:\n" + "Celebrity slug:" + celeb.slug + "\nCelebrity Email:" + celeb.email + "\nCelebrity Bio:" + celeb.bio + "\nCelebrity Category: " + celeb.category);
-    await sendEmail(celeb.email, "Verify Email", "Dear Celebrity,\n We have received your request for registration. Our team will contact you in upcoming working days." + "\n Thanks\n Regards \n FANCLUB.co");
+    await sendEmail(
+      "fanclub.co.pk@gmail.com",
+      "Verify Email",
+      "Celebrity request for registration verification:\n" +
+        "Celebrity slug:" +
+        celeb.slug +
+        "\nCelebrity Email:" +
+        celeb.email +
+        "\nCelebrity Bio:" +
+        celeb.bio +
+        "\nCelebrity Category: " +
+        celeb.category
+    );
+    await sendEmail(
+      celeb.email,
+      "Verify Email",
+      "Dear Celebrity,\n We have received your request for registration. Our team will contact you in upcoming working days." +
+        "\n Thanks\n Regards \n FANCLUB.co"
+    );
 
     res.status(201).send({
       message:
@@ -283,7 +300,6 @@ celebRouter.put("/image/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-
 // UPDATE CELEBRITY INFO
 celebRouter.put("/:id", (req, res) => {
   Celeb.findOneAndUpdate(
@@ -356,9 +372,11 @@ celebRouter.get("/meeting/:fanSlug", async (req, res) => {
     const celebrities = await Celeb.find({
       "meeting.fanSlug": fanSlug,
     });
-    const meetings = celebrities.map((celebrity) =>
-      celebrity.meeting.filter((meet) => meet.fanSlug === fanSlug)
-    ).flat();
+    const meetings = celebrities
+      .map((celebrity) =>
+        celebrity.meeting.filter((meet) => meet.fanSlug === fanSlug)
+      )
+      .flat();
     res.status(200).json({ success: true, data: meetings });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -377,7 +395,7 @@ celebRouter.put("/editProfile/:id", (req, res) => {
         password: req.body.password,
         category: req.body.category,
         bio: req.body.bio,
-      }
+      },
     }
   )
     .then((result) => {
@@ -392,7 +410,6 @@ celebRouter.put("/editProfile/:id", (req, res) => {
       });
     });
 });
-
 
 // DELETE CELEBRITY
 celebRouter.delete("/:id", (req, res) => {
